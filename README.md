@@ -1,66 +1,116 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Product Service API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
+This API provides a simple product management system, including features to create, retrieve, update, and delete products. It is built using Laravel and follows a clean architecture with DTOs and service layers for maintainability and scalability.
 
-## About Laravel
+## Design Choices
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 1. **Service-Oriented Architecture**
+   - The business logic is encapsulated within a `ProductService`, keeping controllers thin.
+   - This promotes separation of concerns and makes unit testing easier.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 2. **DTOs (Data Transfer Objects)**
+   - Used to enforce data consistency when transferring data between layers.
+   - Ensures validation before passing data to the service layer.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 3. **Transactions for Database Integrity**
+   - Database operations are wrapped in transactions to ensure consistency in case of failures.
 
-## Learning Laravel
+### 4. **Dependency Injection**
+   - The `ProductServiceInterface` is injected into the controller, making the system more modular and testable.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Database Schema
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+The `products` table schema:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Column      | Type         | Description                      |
+|------------|-------------|----------------------------------|
+| id         | INT (PK)     | Auto-incrementing primary key   |
+| name       | STRING       | Product name                    |
+| description| TEXT         | Product description             |
+| price      | DECIMAL(10,2)| Product price                   |
+| category   | STRING       | Product category                |
+| image_url  | STRING       | URL of the product image        |
+| created_at | TIMESTAMP    | Timestamp of creation           |
+| updated_at | TIMESTAMP    | Timestamp of last update        |
 
-## Laravel Sponsors
+## API Endpoints
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 1. **Create Product**
+   - **Endpoint:** `POST /api/products`
+   - **Request Body:**
+   ```json
+   {
+       "name": "Laptop",
+       "description": "High-performance laptop",
+       "price": 1200.99,
+       "category": "Electronics",
+       "image_url": "http://example.com/laptop.jpg"
+   }
+   ```
+   - **Response:** `201 Created`
 
-### Premium Partners
+### 2. **Retrieve Product by ID**
+   - **Endpoint:** `GET /api/products/{id}`
+   - **Response:** `200 OK`
+   ```json
+   {
+       "id": 1,
+       "name": "Laptop",
+       "description": "High-performance laptop",
+       "price": 1200.99,
+       "category": "Electronics",
+       "image_url": "http://example.com/laptop.jpg"
+   }
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 3. **Update Product**
+   - **Endpoint:** `PUT /api/products/{id}`
+   - **Request Body:** Same as Create Product.
+   - **Response:** `200 OK`
 
-## Contributing
+### 4. **Delete Product**
+   - **Endpoint:** `DELETE /api/products/{id}`
+   - **Response:** `204 No Content`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Dependencies
 
-## Code of Conduct
+- **Laravel 12+** (PHP framework)
+- **MySQL** (Relational Database)
+- **Mockery** (For Unit Testing Mocks)
+- **PHPUnit** (Testing Framework)
+- **Faker** (For generating test data)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Installation
 
-## Security Vulnerabilities
+1. Clone the repository:
+   ```sh
+   https://github.com/AmadulHaque/moveon-laravel-api-assignment
+   ```
+2. Install dependencies:
+   ```sh
+   composer install
+   ```
+3. Configure environment variables:
+   ```sh
+   cp .env.example .env
+   ```
+   - Set database credentials.
+4. Run migrations:
+   ```sh
+   php artisan migrate --seed
+   ```
+5. Start the development server:
+   ```sh
+   php artisan serve
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Running Tests
 
-## License
+```sh
+php artisan test
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+This API follows best practices in Laravel application development, ensuring scalability, maintainability, and security.
+
